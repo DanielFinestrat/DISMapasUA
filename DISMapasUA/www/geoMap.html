@@ -28,8 +28,22 @@
             padding: 0;
         }
 
+        #caja {
+            height: 100%;
+            width: 100%;
+            position: relative;
+        }
+
+        .barra {
+            height: 60px;
+        }
+
         #map {
-            height: 75%;
+            position: absolute;
+            left: 0;
+            width: 100%;
+            top: 60px;
+            bottom: 0;
         }
     </style>
 
@@ -42,59 +56,65 @@
         <div id="status"></div>
     </div>
 
-    <!-- NavBar-->
-    <nav class="navbar-default" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#home">DSIM</a>
-            </div>
+    <div id="caja">
 
-            <div class="collapse navbar-collapse navbar-right navbar-ex1-collapse">
-                <ul class="nav navbar-nav">
-                    <li class="menuItem"><a href="index.html">Volver Atrás</a></li>
-                </ul>
-            </div>
+        <!-- NavBar-->
+        <div class="barra">
+            <nav class="navbar-default" role="navigation">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#home">DSIM</a>
+                    </div>
+
+                    <div class="collapse navbar-collapse navbar-right navbar-ex1-collapse">
+                        <ul class="nav navbar-nav">
+                            <li class="menuItem"><a href="index.html">Volver Atrás</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
         </div>
-    </nav> 
 
-    <!-- Mapa -->
-    <div id="map"></div>
-    <script>
-        var map;
-        var options = {
-            enableHighAccuracy: true,
-            timeout: 5000,
-            maximumAge: 0
-        };
+        <!-- Mapa -->
+        <div id="map"></div>
+        <script>
+            var map;
+            var options = {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0
+            };
 
-        function success(pos) {
-            var crd = pos.coords;
-            var nPos = { lat: crd.latitude, lng: crd.longitude };
-            var image = 'images/pinPos.png';
+            function success(pos) {
+                var crd = pos.coords;
+                var nPos = { lat: crd.latitude, lng: crd.longitude };
+                var image = 'images/pinPos.png';
 
-            map.setCenter(nPos);
-            var beachMarker = new google.maps.Marker({ position: nPos, map: map, title: "My Position" });
-        }
+                map.setCenter(nPos);
+                var beachMarker = new google.maps.Marker({ position: nPos, map: map, title: "My Position" });
+            }
 
-        function error(err) {
-            console.warn('ERROR(' + err.code + '): ' + err.message);
-        }
+            function error(err) {
+                console.warn('ERROR(' + err.code + '): ' + err.message);
+            }
 
-        function initMap() {
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: 38.384385, lng: -0.510727 },
-                zoom: 18
-            });
-            navigator.geolocation.getCurrentPosition(success, error, options);
-        }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLHEvtalD6kg2DBz5SQ9TuOfgx4-k0aQ8&callback=initMap" async defer></script>
+            function initMap() {
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: 38.384385, lng: -0.510727 },
+                    zoom: 18
+                });
+                navigator.geolocation.getCurrentPosition(success, error, options);
+            }
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLHEvtalD6kg2DBz5SQ9TuOfgx4-k0aQ8&callback=initMap" async defer></script>
+
+    </div>
 
     <!-- JavaScript -->
     <script src="js/jquery-1.10.2.js"></script>
