@@ -25,7 +25,8 @@
     <script>
 
         function bien(data) {
-            document.getElementById('botonBorrar').parentNode.removeChild(elem);
+            var elem = document.getElementById('botonBorrar')
+            elem.parentNode.removeChild(elem);
             $('body').append('<pre>' + JSON.stringify(data, null, 2) + '</pre>');
         }
 
@@ -34,7 +35,7 @@
         }
 
         function getEdificios() {
-            document.getElementById("botonBorrar").innerHTML = "Descargando datos de edificios, espera...";
+            document.getElementById("botonBorrar").innerHTML = document.getElementById("botonBorrar").innerHTML+ "</br>Descargando datos de edificios, espera...";
             $.ajax({
                 url: 'https://dev.datos.ua.es/uapi/72CB7RhNf9RKS4PTW5wm/datasets/11/data',
                 type: 'GET',
