@@ -21,21 +21,89 @@
     <link rel="stylesheet" href="css/magnific-popup.css">
     <script src="js/modernizr-2.8.3.min.js"></script>
     <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
-    
-    <script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLHEvtalD6kg2DBz5SQ9TuOfgx4-k0aQ8"></script>
 
-        function bien(data) {
-            var elem = document.getElementById('botonBorrar')
-            elem.parentNode.removeChild(elem);
-            $('body').append('<pre>' + JSON.stringify(data, null, 2) + '</pre>');
+    <script>
+        var map;
+
+        //Crear y manejar mapa
+        jQuery(document).ready(
+
+            function () {
+            jQuery(document).on("click", ".button", function (e) {
+                e.preventDefault();
+                var latLng = jQuery(this).attr("data-latLng");
+                initialize(latLng);
+            });
+
+            function initialize(latLng) {
+                latLng = latLng.split(",");
+                var mapOptions = { center: new google.maps.LatLng(latLng[0], latLng[1]), zoom: 19 };
+                var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+                var nPos = { lat: Number(latLng[0]), lng: Number(latLng[1]) };
+                var beachMarker = new google.maps.Marker({ position: nPos, map: map, title: "Edificio" });
+            }
+
+        });
+
+
+        //Devolver informacion de la linea
+        function tratarLinea(linea) {
+            var nombreEdif = linea.nombre;
+            var plantasEdif = linea.plantas;
+
+            //Coordenadas
+            var coordArray = linea.bbox.split(",");
+            var longMedia = (parseFloat(coordArray[0]) + parseFloat(parseFloat(coordArray[2]))) / 2;
+            var latMedia = (parseFloat(parseFloat(coordArray[1])) + parseFloat(parseFloat(coordArray[3]))) / 2;
+            var coordEdif = latMedia + ", " + longMedia;
+
+            return "<td>" + nombreEdif + "</td><td>" + coordEdif + "</td><td>" + plantasEdif + "</td><td><a href='#' class='button' data-latLng='" + coordEdif + "'>Ver Mapa</a></td>";
         }
 
+        //Quitar columnas innecesarias
+        function replacer(key, value) {
+            if (key === "id" || key === "count_geometrias") {
+                return undefined;
+            }
+            return value;
+        }
+
+        //Funcion al obtener recurso
+        function bien(data) {
+            //Borrar boton
+            var elem = document.getElementById('botonBorrar')
+            elem.parentNode.removeChild(elem);
+
+            //Conseguir array
+            var tablaContainer = document.getElementById('tabla');
+            var jsonString = JSON.stringify(data, replacer, '\t');
+            var jsonFinal = JSON.parse(jsonString);
+            var linea = "";
+
+            //Convertir array en tabla
+            tabla = "<div class='container table-responsive'><table class='table table-striped table-bordered table-hover table-condensed'><thead><tr><th>Nombre Edificio</th><th>Coordenadas</th><th>Plantas</th><th>Ver Mapa</th></tr></thead><tbody>";
+            for (i = 0; i < jsonFinal.length; i++) {
+                linea = "<tr>";
+                linea = linea + tratarLinea(jsonFinal[i]);
+                linea = linea + "</tr>";
+                tabla = tabla + linea;
+            }
+            tabla = tabla + "</tbody></table></div>";
+
+            //Imprimir tabla
+            tablaContainer.innerHTML = tabla;
+        }
+
+        //Funcion cuando falla al obtener recurso
         function mal(jqXHR, textStatus, error){
             alert( "error: " + jqXHR.responseText);
         }
 
+        //Funcion que pide recurso
         function getEdificios() {
-            document.getElementById("botonBorrar").innerHTML = document.getElementById("botonBorrar").innerHTML+ "</br>Descargando datos de edificios, espera...";
+            document.getElementById("botonBorrar").innerHTML = "Descargando datos de edificios, espera...";
             $.ajax({
                 url: 'https://dev.datos.ua.es/uapi/72CB7RhNf9RKS4PTW5wm/datasets/11/data',
                 type: 'GET',
@@ -44,9 +112,21 @@
                 error: mal
             });
         }
-
     </script>
 
+    <style>
+        .table {
+            font-size: 75%;
+        }
+        
+        #map-canvas {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            top: 60px;
+            bottom: 0;
+        }
+    </style>
 
 </head>
 
@@ -78,11 +158,22 @@
         </div>
     </nav>
     
-    <!-- Botón -->
-    <div id="botonBorrar" class="col-xs-12 text-center abcen1">
-        <ul class="list-inline intro-social-buttons">
-            <li><a onclick="getEdificios();" class="btn  btn-lg mybutton_cyano wow fadeIn" data-wow-delay="0.8s"> Mostrar Tabla </a></li>
-        </ul>
+
+    <!-- Sobreescribir con MAPA -->
+    <div id="map-canvas">
+
+        <!-- Botón -->
+        <div id="botonBorrar" class="col-xs-12 text-center abcen1">
+            <ul class="list-inline intro-social-buttons">
+                <li><a onclick="getEdificios();" class="btn  btn-lg mybutton_cyano wow fadeIn" data-wow-delay="0.8s"> Mostrar Tabla </a></li>
+            </ul>
+        </div>
+
+        <!-- Tabla -->
+        <div id="tabla">
+
+        </div>
+
     </div>
 
     <!-- JavaScript -->

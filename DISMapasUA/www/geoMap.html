@@ -94,7 +94,6 @@
             function success(pos) {
                 var crd = pos.coords;
                 var nPos = { lat: crd.latitude, lng: crd.longitude };
-                var image = 'images/pinPos.png';
 
                 map.setCenter(nPos);
                 var beachMarker = new google.maps.Marker({ position: nPos, map: map, title: "My Position" });
