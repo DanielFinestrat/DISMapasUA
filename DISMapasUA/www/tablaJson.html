@@ -30,8 +30,8 @@
         //Crear y manejar mapa
         jQuery(document).ready(
 
-            function () {
-            jQuery(document).on("click", ".button", function (e) {
+            function(){
+                jQuery(document).on("click", ".button", function (e) {
                 e.preventDefault();
                 var latLng = jQuery(this).attr("data-latLng");
                 initialize(latLng);
@@ -103,7 +103,7 @@
 
         //Funcion que pide recurso
         function getEdificios() {
-            document.getElementById("botonBorrar").innerHTML = "Descargando datos de edificios, espera...";
+            document.getElementById("botonBorrar").innerHTML = "<div id='preloader'><div id='status'></div></div>";
             $.ajax({
                 url: 'https://dev.datos.ua.es/uapi/9Eu4JZTD6f5St5zPY3vZ/datasets/11/data',
                 type: 'GET',
