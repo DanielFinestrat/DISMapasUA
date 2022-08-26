@@ -5,4 +5,4 @@ Esta aplicación utiliza la API de la UA para obtener la posición de todos los 
 
 Implementado en Visual Studio con Apache Cordova, adaptando el tema bootstrap "Flatfy" de Andrea Galanti.
 
-[Daniel Finestrat Martínez, 2016.](http://danielfinestrat.com)
+2016.
